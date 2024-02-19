@@ -6,6 +6,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class FileParser {
 
@@ -18,7 +22,11 @@ public class FileParser {
 			System.out.println("Limit: " + fileContent.getLimit());
 			System.out.println("Current Generation: " + fileContent.getCurrentGeneration());
 			System.out.println("Old Generation: " + fileContent.getOldGeneration());
-			parser.updateVersion(fileContent);
+			String inputPath="/home/narottam/golang.0."+fileContent.getCurrentGeneration();
+			String targetpath="/home/narottam/tmp/";
+		   parser.copyFileToDirectory(inputPath, targetpath);
+			
+			//parser.updateVersion(fileContent);
 		} catch (IOException e) {
 			System.err.println("Error reading file: " + e.getMessage());
 		}
@@ -69,6 +77,20 @@ public class FileParser {
         }
 
 	}
+	
+	 public void copyFileToDirectory(String sourceFilePath, String targetDirectoryPath) throws IOException {
+	        Path sourceFile = Paths.get(sourceFilePath);
+	        Path targetDirectory = Paths.get(targetDirectoryPath);
+
+	        // Get the filename from the source file path
+	        String fileName = sourceFile.getFileName().toString();
+
+	        // Construct the target file path
+	        Path targetFile = targetDirectory.resolve(fileName);
+
+	        // Copy the source file to the target directory
+	        Files.copy(sourceFile, targetFile,StandardCopyOption.REPLACE_EXISTING);
+	    }
 
 class FileContent {
     private int limit;
