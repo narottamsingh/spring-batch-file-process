@@ -1,0 +1,62 @@
+ConfigMap YAML:
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: xml-config
+data:
+  config.xml: |
+    <config>
+        <database>
+            <username>old_username</username>
+            <password>REPLACE_WITH_PASSWORD_PLACEHOLDER</password>
+        </database>
+    </config>
+
+
+
+Secret: 
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-secret
+data:
+  password: BASE64_ENCODED_PASSWORD
+
+
+Deployment:
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: my-app-container
+        image: my-image
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: password
+        volumeMounts:
+        - name: config-volume
+          mountPath: /path/to/config
+      volumes:
+      - name: config-volume
+        configMap:
+          name: xml-config
+
