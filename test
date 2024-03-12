@@ -1,3 +1,32 @@
+
+
+#!/bin/bash
+
+# Read the values from the secret
+username=$(cat /path/to/secret/username.txt)
+password=$(cat /path/to/secret/password.txt)
+
+# Generate the XML content
+xml_content="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<config>
+    <database>
+        <username>$username</username>
+        <password>$password</password>
+    </database>
+</config>"
+
+# Write the XML content to a file
+echo "$xml_content" > /path/to/config/config.xml
+
+echo "XML file generated successfully."
+
+
+
+
+
+
+
+
 ConfigMap YAML:
 
 
@@ -24,29 +53,6 @@ metadata:
   name: db-secret
 data:
   password: BASE64_ENCODED_PASSWORD
-
-
-#!/bin/bash
-
-# Read the values from the secret
-username=$(cat /path/to/secret/username.txt)
-password=$(cat /path/to/secret/password.txt)
-
-# Generate the XML content
-xml_content="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<config>
-    <database>
-        <username>$username</username>
-        <password>$password</password>
-    </database>
-</config>"
-
-# Write the XML content to a file
-echo "$xml_content" > /path/to/config/config.xml
-
-echo "XML file generated successfully."
-
-
 
 
 
