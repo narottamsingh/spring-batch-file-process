@@ -1,3 +1,24 @@
+import shutil
+
+def copy_folder(source_folder, destination_folder):
+    try:
+        shutil.copytree(source_folder, destination_folder)
+        print(f"Folder '{source_folder}' copied to '{destination_folder}' successfully.")
+    except FileExistsError:
+        print(f"Error: Destination folder '{destination_folder}' already exists.")
+
+# Example usage
+source_folder = 'source_folder'
+destination_folder = 'destination_folder'
+
+copy_folder(source_folder, destination_folder)
+
+
+
+
+
+
+
 import requests
 
 def download_jar_from_maven(repo_url, group_id, artifact_id, version, username, password, output_file):
