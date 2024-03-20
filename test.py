@@ -1,3 +1,23 @@
+import subprocess
+
+# Replace 'script.sh' with the path to your shell script
+script_path = 'script.sh'
+
+# Parameters to pass to the shell script
+param1 = 'value1'
+param2 = 'value2'
+
+# Call the shell script with parameters
+try:
+    subprocess.run(['bash', script_path, param1, param2], check=True)
+    print("Shell script executed successfully.")
+except subprocess.CalledProcessError as e:
+    print(f"Error executing shell script: {e}")
+
+
+
+
+
 import shutil
 
 def copy_folder(source_folder, destination_folder):
