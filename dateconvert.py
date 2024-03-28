@@ -15,8 +15,8 @@ def convert_timezone(input_date_string):
         # Convert to the target timezone
         target_timezone = pytz.timezone("America/New_York")
         target_datetime = utc_date.astimezone(target_timezone)
-        
-        return target_datetime
+        formatted_datetime = target_datetime.strftime("%Y-%m-%d")
+        return formatted_datetime
     except Exception as e:
         print("Error occurred:", e)
         return None
@@ -24,6 +24,4 @@ def convert_timezone(input_date_string):
 
 input_date_string = "2024-03-28T12:12:17.064791+00:00"  
 converted_datetime = convert_timezone(input_date_string)
-
-formatted_datetime = converted_datetime.strftime("%Y-%m-%d")
-print("Converted Date in America/New_York timezone (YYYY-MM-DD):", formatted_datetime)
+print("Converted Date in America/New_York timezone (YYYY-MM-DD):", converted_datetime)
