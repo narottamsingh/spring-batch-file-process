@@ -1,0 +1,1 @@
+sed -i "s|\${access_key}|$access_key|g" test.xml
