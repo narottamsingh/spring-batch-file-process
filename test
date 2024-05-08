@@ -1,3 +1,4 @@
+=IF(ISNUMBER(SEARCH(".", A1)), RIGHT(A1, LEN(A1) - SEARCH("@", SUBSTITUTE(A1, ".", "@", LEN(A1) - LEN(SUBSTITUTE(A1, ".", ""))))), "NA")
 
  public static <T> List<List<T>> chunkList(List<T> list, int chunkSize) {
         List<List<T>> chunks = new ArrayList<>();
