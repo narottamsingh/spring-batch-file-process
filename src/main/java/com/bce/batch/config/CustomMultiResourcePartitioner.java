@@ -13,7 +13,7 @@ public class CustomMultiResourcePartitioner implements Partitioner {
 	private static final String DEFAULT_KEY_NAME = "fileName";
 
 	private static final String PARTITION_KEY = "partition";
-
+	
 	private Resource[] resources = new Resource[0];
 
 	private String keyName = DEFAULT_KEY_NAME;
@@ -52,9 +52,7 @@ public class CustomMultiResourcePartitioner implements Partitioner {
 			ExecutionContext context = new ExecutionContext();
 			Assert.state(resource.exists(), "Resource does not exist: " + resource);
 			context.putString("filename", resource.getFilename());
-			context.putString("opFileName", "output" + k++ + ".xml");
-
-			map.put(PARTITION_KEY + i, context);
+			map.put(PARTITION_KEY +resource.getFilename(),context); 
 			i++;
 		}
 		return map;

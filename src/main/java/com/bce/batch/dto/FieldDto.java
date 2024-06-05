@@ -1,5 +1,7 @@
 package com.bce.batch.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,14 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FieldDto {
 
-    private int id;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String gender;
-    private String contactNo;
-    private String country;
-    private String dob;
+    private String  data;
+    private List<Customer> customers;
 
-
+    
 }

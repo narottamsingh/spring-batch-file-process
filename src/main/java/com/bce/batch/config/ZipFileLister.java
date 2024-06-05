@@ -12,6 +12,10 @@ import java.util.stream.Collectors;
 public class ZipFileLister {
 
     public Map<String, List<String>> listSourceZip(String folder) throws IOException {
+    	
+    	 
+           
+           
         Map<String, List<String>> m = new HashMap<>();
         File folderDir = new File(folder);
 
@@ -19,14 +23,16 @@ public class ZipFileLister {
         Map<String, List<String>> oneFolderMap = Files.find(Paths.get(folderDir.getPath()), 1,
                 (path, attr) -> path.toFile().getName().endsWith(".zip"))
                 .map(e -> {
-                    System.out.println(e.getParent()+"/"+e.getFileName().toString().trim());
                     return e;
                 })
-                .collect(Collectors.groupingBy(p -> "test: " + p.getParent().toString().trim(),
-                        Collectors.mapping(p -> p.getFileName().toString().trim(), Collectors.toList())));
+                .collect(Collectors.groupingBy(p -> "test:" + p.getParent().toString().trim(),
+                        Collectors.mapping(p -> p.getParent().toString().trim()+p.getFileName().toString().trim(), Collectors.toList())));
 
         return oneFolderMap;
     }
+    
+   
+    
     
     
     public Map<String, List<Path>> listSourceZipT(String folder) throws IOException {
@@ -54,6 +60,11 @@ public class ZipFileLister {
     public static void main(String[] args) {
         ZipFileLister lister = new ZipFileLister();
         try {
+        	
+        	String str="  sjhs djhdjh d  dd";
+        	str=str.replaceAll("\\s", "");
+        	System.out.println(str);
+        	
             Map<String, List<String>> result = lister.listSourceZip("/home/narottam/test/");
 			/*
 			 * result.forEach((folder, files) -> { System.out.println("Folder: " + folder);
@@ -61,8 +72,8 @@ public class ZipFileLister {
 			 */
             System.out.println(result);
             System.out.println("\n\n");
-            Map<String, List<Path>> result1 = lister.listSourceZipT("/home/narottam/test/");
-            System.out.println(result1);
+           // Map<String, List<Path>> result1 = lister.listSourceZipT("/home/narottam/test/");
+            //System.out.println(result1);
 			/*
 			 * result1.forEach((folder, files) -> { System.out.println("Folder: " + folder);
 			 * System.out.println("Files: " + files); });

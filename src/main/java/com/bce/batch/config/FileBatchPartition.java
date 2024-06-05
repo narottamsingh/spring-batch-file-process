@@ -4,10 +4,11 @@ import java.io.IOException;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.ItemStream;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
@@ -24,7 +25,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.bce.batch.dto.Customer;
 import com.bce.batch.readerwritterprocessor.CustomerProcessor;
-import com.bce.batch.readerwritterprocessor.CustomerWritter;
+import com.bce.batch.readerwritterprocessor.CustomerWriter;
+import com.bce.batch.readerwritterprocessor.ResourceAwareItemWriterItemStreamImpl;
 
 @Configuration
 public class FileBatchPartition {
@@ -37,13 +39,13 @@ public class FileBatchPartition {
 
 	@Autowired
 	private ResourcePatternResolver resourcePatternResolver;
-	
-	private final String filePathDir="/home/narottam/project/springboot/springbatch/spring-boot-batch/src/main/resources/"; 
+
+	private final String filePathDir = "/home/narottam/project/springboot/springbatch/spring-boot-batch/src/main/resources/";
 
 	@Bean
 	public Step slaveStep1() {
 		return steps.get("slaveStep1").<Customer, Customer>chunk(10).reader(itemReader1(null)).processor(processor1())
-				.writer(writer1()).taskExecutor(taskExecutorThread1()).build();
+				.writer(writer1()).stream((ItemStream) writer1()).taskExecutor(taskExecutorThread1()).build();
 	}
 
 	@Bean
@@ -56,7 +58,7 @@ public class FileBatchPartition {
 	@StepScope
 	public FlatFileItemReader<Customer> itemReader1(@Value("#{stepExecutionContext['filename']}") String filePath) {
 		FlatFileItemReader<Customer> itemReader = new FlatFileItemReader<>();
-		itemReader.setResource(new FileSystemResource(filePathDir+filePath));
+		itemReader.setResource(new FileSystemResource(filePathDir + filePath));
 		itemReader.setName("csvReader");
 		itemReader.setLinesToSkip(1);
 		itemReader.setLineMapper(lineMapper1());
@@ -88,11 +90,30 @@ public class FileBatchPartition {
 		return new CustomerProcessor();
 	}
 
-	@Bean
-	@StepScope
-	public CustomerWritter<Customer> writer1() {
-		return new CustomerWritter<Customer>();
-	}
+	/*
+	 * @Bean
+	 * 
+	 * @StepScope public CustomerWritter<Customer> writer111() {
+	 * CustomerWritter<Customer> writer = new CustomerWritter<>();
+	 * ResourceAwareItemWriterItemStream<Customer> delegate = new
+	 * ResourceAwareItemWriterItemStreamImpl();
+	 * System.out.print(AppConfigStatic.getDescription());
+	 * writer.setDelegate(delegate); writer.setResource(new
+	 * FileSystemResource("/home/narottam/tmp/test.txt")); //
+	 * writer.setItemCountLimitPerResource(100);
+	 * 
+	 * return writer; }
+	 */
+	
+	 @Bean
+	    public ItemWriter<Customer> writer1() {
+	        ResourceAwareItemWriterItemStreamImpl writerDelegate = new ResourceAwareItemWriterItemStreamImpl();
+	        CustomerWriter<Customer> customerWriter = new CustomerWriter<>();
+	        customerWriter.setDelegate(writerDelegate);
+	        customerWriter.setResource(new FileSystemResource("/home/narottam/tmp/test.txt"));
+	        return customerWriter;
+	    }
+
 
 	@Bean
 	public ThreadPoolTaskExecutor taskExecutorThread1() {
