@@ -3,6 +3,8 @@ package com.bce.batch.readerwritterprocessor;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemStream;
@@ -20,7 +22,26 @@ public class CustomerWriter<Customer> implements ItemWriter<Customer>, ItemStrea
 	private boolean opened = false;
 	private ResourceAwareItemWriterItemStream<? super Customer> delegate;
 	private Resource resource;
-	
+	ExecutorService executorService = Executors.newFixedThreadPool(5);
+
+	public void writeOld(List<? extends Customer> items) throws Exception {
+
+		FileWriteTask task = new FileWriteTask("run", (List<com.bce.batch.dto.Customer>) items);
+		executorService.submit(task);
+
+		executorService.shutdown();
+
+		/*
+		 * System.out.print(AppConfigStatic.getDescription()); if (resource == null) {
+		 * throw new
+		 * IllegalStateException("Resource must be set before calling write."); }
+		 * 
+		 * if (!opened) { openNewResource(); }
+		 * 
+		 * delegate.write(items);
+		 */
+	}
+
 	@Override
 	public void write(List<? extends Customer> items) throws Exception {
 		System.out.print(AppConfigStatic.getDescription());
@@ -71,7 +92,6 @@ public class CustomerWriter<Customer> implements ItemWriter<Customer>, ItemStrea
 		}
 	}
 
-	
 	public void setDelegate(ResourceAwareItemWriterItemStream<? super Customer> delegate) {
 		this.delegate = delegate;
 	}
@@ -79,4 +99,5 @@ public class CustomerWriter<Customer> implements ItemWriter<Customer>, ItemStrea
 	public void setResource(Resource resource) {
 		this.resource = resource;
 	}
+
 }
