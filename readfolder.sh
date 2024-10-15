@@ -31,28 +31,39 @@ for PARENT_DIR in "$BASE_DIR"/*; do
         # Navigate to the subfolder
         cd "$SUB_DIR" || exit
         
-        all_zip_files=()
+        # Initialize an array to hold json files
+        json_files=()
         
         # Loop through all files in the subfolder
         for FILE in *; do
           if [[ -f "$FILE" ]]; then
+            # Print the name of non-JSON files
             if [[ "$FILE" != *.json ]]; then
-                all_zip_files+=("$FILE")
+              echo "    Non-JSON file: $FILE"
             else
-             # add here conversion
-             # remove origial .wav file
-              all_zip_files+=("$FILE")
+              # Add JSON files to the array
+              json_files+=("$FILE")
             fi
           fi
         done
 
-        if [[ ${#all_zip_files[@]} -gt 0 ]]; then
-          zip -r "$DEST_DIR/$parentfolder/$zipfolder" "${all_zip_files[@]}"
+        # Zip only .json files if there are any
+        if [[ ${#json_files[@]} -gt 0 ]]; then
+          zip -r "$DEST_DIR/$parentfolder/$zipfolder" "${json_files[@]}"
           echo "Zipped .json files from $subfolder into $zipfolder"
+          
+          # Iterate over each .json file and delete it
+          for json_file in "${json_files[@]}"; do
+            if [[ "$json_file" == *.json ]]; then
+              rm -f "$json_file"
+              echo "Deleted .json file: $json_file"
+            fi
+          done
         else
           echo "No .json files found in $subfolder"
         fi
 
+        # Navigate back to the base directory
         cd "$BASE_DIR" || exit
       fi
     done
