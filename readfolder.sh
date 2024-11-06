@@ -78,3 +78,32 @@ done
 # Clean up: delete the temporary directory
 #rm -rf "$TMP_DIR"
 echo "Temporary directory deleted: $TMP_DIR"
+
+#!/bin/bash
+
+# Set the directory path
+DIR_PATH="/path/to/your/directory"
+
+# Get the current date in YYYY-MM-DD format
+CURRENT_DATE=$(date +%Y-%m-%d)
+
+# Find and delete directories older than 10 days
+find "$DIR_PATH" -type d -name "folder_*" | while read -r folder; do
+  # Extract the date part from the folder name
+  FOLDER_DATE=$(basename "$folder" | sed 's/folder_//')
+
+  # Check if the date format is correct
+  if [[ "$FOLDER_DATE" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+    # Calculate the difference in days between CURRENT_DATE and FOLDER_DATE
+    DAYS_DIFF=$(( ( $(date -d "$CURRENT_DATE" +%s) - $(date -d "$FOLDER_DATE" +%s) ) / 86400 ))
+
+    # Delete the folder if it's older than 10 days
+    if (( DAYS_DIFF > 10 )); then
+      echo "Deleting $folder (created $DAYS_DIFF days ago)"
+      rm -rf "$folder"
+    fi
+  else
+    echo "Skipping $folder: invalid date format"
+  fi
+done
+
