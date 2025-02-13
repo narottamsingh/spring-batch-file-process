@@ -6,12 +6,18 @@ def read_and_trim(file_path):
     and returns a list of non-empty lines.
     """
     trimmed_lines = []
+    
     with open(file_path, 'r') as file:
         for line in file:
-            # Remove leading/trailing whitespace.
-            trimmed_line = line.strip()
-            if trimmed_line:
-                trimmed_lines.append(trimmed_line)
+            # Split the line into 50-byte chunks
+            chunks = [line[i:i+50] for i in range(0, len(line), 50)]
+            
+            # Trim each chunk and store it if not empty
+            for chunk in chunks:
+                trimmed_chunk = chunk.strip()
+                if trimmed_chunk:
+                    trimmed_lines.append(trimmed_chunk)
+                    
     return trimmed_lines
 
 def main():
@@ -57,4 +63,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
