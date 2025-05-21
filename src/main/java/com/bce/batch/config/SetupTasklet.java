@@ -13,6 +13,7 @@ public class SetupTasklet implements Tasklet {
         System.out.println("Executing my setup tasklet...");
         // Return RepeatStatus.FINISHED if the task is successful
         Thread.sleep(10000);
+        System.out.println("Executing my setup tasklet done........");
         return RepeatStatus.FINISHED;
     }
 }

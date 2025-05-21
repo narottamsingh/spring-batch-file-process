@@ -59,6 +59,7 @@ public class ResourceAwareItemWriterItemStreamImpl implements ResourceAwareItemW
 			writer.newLine();
 		}
 		writer.flush();
+//		throw new ItemStreamException("Failed to open the resource for writing.");
 	}
 
 	@Override
