@@ -27,6 +27,7 @@ public class JobCompletionNotificationListener implements JobExecutionListener {
         	jobExecution.setStatus(BatchStatus.COMPLETED);
         	jobExecution.setExitStatus(ExitStatus.COMPLETED);
             LOGGER.error("Job {} failed with status: {}", jobExecution.getJobInstance().getJobName(), jobExecution.getStatus());
+            System.exit(0);
         } else {
             LOGGER.info("Job {} completed successfully!", jobExecution.getJobInstance().getJobName());
         }

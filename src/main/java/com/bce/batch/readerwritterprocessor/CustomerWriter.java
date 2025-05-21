@@ -31,15 +31,7 @@ public class CustomerWriter<Customer> implements ItemWriter<Customer>, ItemStrea
 
 		executorService.shutdown();
 
-		/*
-		 * System.out.print(AppConfigStatic.getDescription()); if (resource == null) {
-		 * throw new
-		 * IllegalStateException("Resource must be set before calling write."); }
-		 * 
-		 * if (!opened) { openNewResource(); }
-		 * 
-		 * delegate.write(items);
-		 */
+		
 	}
 
 	@Override
